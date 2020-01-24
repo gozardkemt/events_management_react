@@ -1,26 +1,106 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Header from './Header.js'
+import Body from './Body.js'
+import Footer from './Footer.js'
+import { MainStyleWrapper } from './styleWrappers.js';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const localhostDataUrl = 'http://localhost:8080/events.json';
+
+const defaultState = {
+	events: [],
+	isError: false,
+	isLoading: true,
+	sortedAlphabeticaly: null,
+	sortedDateAscending: null,
+	newTitle: '',
+	newDate: ''
 }
 
-export default App;
+export default class App extends React.Component {
+
+	constructor(props) {
+		super(props)
+		this.state = defaultState
+	}
+
+	componentDidMount() {
+		fetch(localhostDataUrl)
+			.then( res => res.json())
+			.then(
+			res => { this.saveDataToState(res) },
+			err => { this.errorWhileFetching(err) }
+			)
+	}
+
+	saveDataToState = (res) => {
+		this.setState({
+			events: res,
+			isLoading: false
+			})
+	}
+
+	errorWhileFetching = (err) => {
+		console.error(err);
+		this.setState({
+			isLoading: false,
+			isError: true
+		})
+	}
+
+	sortAlphabeticaly = () => {
+		const bool = this.state.sortedAlphabeticaly;
+		this.setState({
+			sortedAlphabeticaly: !bool,
+			sortedDateAscending: null
+		})
+	}
+
+	sortDateAscending = () => {
+		const bool = this.state.sortedDateAscending;
+		this.setState({
+			sortedDateAscending: !bool,
+			sortedAlphabeticaly: null
+		})
+	}
+
+	addNewEvent = () => {
+		const newEvent = {
+			title: this.state.newTitle,
+			date: this.state.newDate
+		}
+		this.setState({
+			events: [newEvent].concat(this.state.events)
+		})
+	}
+
+	render() {
+
+		const {
+			events,
+			sortedDateAscending:sortedDate,
+			sortedAlphabeticaly:sortedAbc,
+		} = this.state;
+
+		const {
+			sortAlphabeticaly,
+			sortDateAscending,
+			addNewEvent,
+		} = this;
+
+		return (
+			< MainStyleWrapper >
+		  		<Header
+					sortAbc={sortAlphabeticaly}
+					sortDates={sortDateAscending}
+					/>
+				<Body
+					events={events}
+					orderAbc={sortedAbc}
+					orderDate={sortedDate}
+					addNewEvent={addNewEvent}
+					/>
+				<Footer />
+			< /MainStyleWrapper >
+	  )
+	}
+}
