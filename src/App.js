@@ -2,6 +2,7 @@ import React from 'react';
 import Header from './Header.js'
 import Body from './Body.js'
 import Footer from './Footer.js'
+import { isClickedInOrNotEnter } from './appServices.js'
 import { MainStyleWrapper } from './styleWrappers.js';
 
 const dataPath = './data/events.json';
@@ -37,6 +38,8 @@ export default class App extends React.Component {
 		this.state = defaultState
 	}
 
+	// handle data import
+
 	componentDidMount() {
 		fetch(dataPath)
 			.then( res => res.json())
@@ -61,6 +64,8 @@ export default class App extends React.Component {
 		})
 	}
 
+	// handle sorting
+
 	sortAlphabeticaly = () => {
 		this.setState({
 			...defaultSortingState,
@@ -75,31 +80,14 @@ export default class App extends React.Component {
 		})
 	}
 
+	// handle adding new event
+
 	addNewEvent = () => { this.setState({ newEventActive: true })}
-
-	removeNewEvent = () => {
-
-		const article = this.inputRef.current.parentNode;
-		article.classList.toggle('SlideOut');
-
-		this.setState({ ...defaultNewEventState})
-	}
+	removeNewEvent = () => { this.setState({ ...defaultNewEventState})}
 
 	comfirmNewEvent = (e) => {
 
-		const inputText = this.inputRef.current;
-		const inputDate = inputText.previousSibling;
-
-		if (e.type === 'click')
-		{
-			if (e.target.contains(inputText)) { return }
-			if (e.target.contains(inputDate)) { return }
-		}
-
-		if (e.type === 'keyup')
-		{
-			if (e.keyCode !== 13) { return }
-		}
+		if ( isClickedInOrNotEnter(e, this.inputRef)) { return }
 
 		const newEvent = {
 			title: this.state.newTitle || 'Nový záznam',
@@ -112,11 +100,10 @@ export default class App extends React.Component {
 		})
 	}
 
-	handleTyping = e => {
+	handleInputTyping = e => {
 
 		const input = e.currentTarget;
 		const type = input.type === 'text' ? 'newTitle' : 'newDate';
-
 		this.setState({ [type]: input.value })
 	}
 
@@ -135,7 +122,7 @@ export default class App extends React.Component {
 			sortAlphabeticaly,
 			sortDateAscending,
 			addNewEvent,
-			handleTyping,
+			handleInputTyping,
 			comfirmNewEvent,
 			removeNewEvent,
 			inputRef
@@ -146,12 +133,14 @@ export default class App extends React.Component {
 		  		<Header
 					sortAbc={sortAlphabeticaly}
 					sortDates={sortDateAscending}
-					order={{abc:sortedAbc,date: sortedDate}}
+					order={{
+						abc:sortedAbc,
+						date: sortedDate
+					}}
 					/>
 				<Body
-					handleTyping={handleTyping}
 					events={events}
-					order={{abc:sortedAbc,date: sortedDate}}
+					handleTyping={handleInputTyping}
 					newEventActive={newEventActive}
 					addNewEvent={addNewEvent}
 					newTitle={newTitle}
@@ -159,6 +148,10 @@ export default class App extends React.Component {
 					comfirmNewEvent={comfirmNewEvent}
 					removeNewEvent={removeNewEvent}
 					inputRef={inputRef}
+					order={{
+						abc: sortedAbc,
+						date: sortedDate
+					}}
 					/>
 				<Footer />
 			< /MainStyleWrapper >

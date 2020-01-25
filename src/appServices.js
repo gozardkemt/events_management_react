@@ -1,4 +1,5 @@
 
+//  formating
 
 export const formatDate = (s) => {
 	const d = new Date(s);
@@ -7,6 +8,8 @@ export const formatDate = (s) => {
 	const year = d.getFullYear();
 	return `${day}. ${month}. ${year}`;
 }
+
+//  sorting objects
 
 export const sortEvents = (events, date, abc) => {
 
@@ -32,4 +35,25 @@ const compare = (a, b) => {
   if (a < b) { return -1 }
   if (a > b) { return 1 }
   return 0;
+}
+
+// clicks 
+
+export const isClickedInOrNotEnter = (e, ref) => {
+
+	const inputText = ref.current;
+	const inputDate = inputText.previousSibling;
+
+	if (e.type === 'click')
+	{
+		if (e.target.contains(inputText)) { return true }
+		if (e.target.contains(inputDate)) { return true }
+	}
+
+	if (e.type === 'keyup')
+	{
+		if (e.keyCode !== 13) { return true }
+	}
+
+	return false
 }
