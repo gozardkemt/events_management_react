@@ -1,5 +1,5 @@
 import React from 'react';
-import { FilterBarStyleWrapper, titleStyle, orderIconStyle, orderTitleStyle } from './styleWrappers';
+import { FilterBarStyleWrapper, orderTitleStyle } from './styleWrappers';
 
 export default class Header extends React.Component {
 
@@ -8,14 +8,16 @@ export default class Header extends React.Component {
 		const {
 			sortAbc,
 			sortDates,
+			order
 		} = this.props;
 
 		return (
 			<>
-				<h1 style={titleStyle}>Podujatia</h1>
+				<h1 className="title">Podujatia</h1>
 				< FilterBar
 					sortAbc={sortAbc}
 					sortDates={sortDates}
+					order={order}
 					/>
 			</>
 		)
@@ -24,13 +26,17 @@ export default class Header extends React.Component {
 
 class FilterBar extends React.Component {
 	render() {
-		const { sortAbc, sortDates } = this.props;
+
+		const { sortAbc, sortDates, order } = this.props;
+
+		const dateButton = order.date ? 'Od najnovších' : 'Od najstarších';
+		const abcButton = order.abc ? 'Xyz' : 'Abc';
 
 		return (
 			< FilterBarStyleWrapper >
-				<span style={orderTitleStyle}>Zoradiť:</span>
-				<span style={orderIconStyle} onClick={sortDates}>&uarr;&darr;</span>
-				<span style={orderIconStyle} onClick={sortAbc}>Abc</span>
+				<span className="sortTitle">Zoradiť:</span>
+				<span className="sortIcons" onClick={sortDates}>{dateButton}</span>
+				<span className="sortIcons" onClick={sortAbc}>{abcButton}</span>
 			</ FilterBarStyleWrapper >
 		)
 	}

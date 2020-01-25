@@ -15,13 +15,13 @@ export const sortEvents = (events, date, abc) => {
 	if ( date === null ) {
 		return abc ?
 		events.sort((a,b) => compare(getTitle(a), getTitle(b))) :
-		events.sort ((a,b) => compare(getTitle(b), getTitle(a)));
+		events.sort((a,b) => compare(getTitle(b), getTitle(a)));
 	}
 
 	if ( abc === null ) {
 		return date ?
-		events.sort((a, b) => compare(newDate(a), newDate(b))) :
-		events.sort((a, b) => compare(newDate(b), newDate(a)));
+		events.sort((a,b) => compare(newDate(a), newDate(b))) :
+		events.sort((a,b) => compare(newDate(b), newDate(a)));
 	}
 }
 

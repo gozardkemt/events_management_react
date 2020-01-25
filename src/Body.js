@@ -1,51 +1,132 @@
 import React from 'react';
 import { formatDate, sortEvents } from './appServices.js';
-import { EventStyleWrapper, firstArticleToAdd, BodyStyleWrapper } from './styleWrappers.js';
-
+import { EventStyleWrapper, BodyStyleWrapper } from './styleWrappers.js';
 
 export default class Body extends React.Component {
 
   render() {
 
-	  const { events, orderAbc, orderDate, addNewEvent } = this.props;
+	  const {
+		  events,
+		  order,
+		  addNewEvent,
+		  newEventActive,
+		  newTitle,
+		  newDate,
+		  handleTyping,
+		  comfirmNewEvent,
+		  removeNewEvent,
+		  inputRef
+	  } = this.props;
 
 	  return (
 		  <BodyStyleWrapper>
-		  	<AddNewEvent
+		  	<EventPlaceholder
 				addNewEvent={addNewEvent}
+				newEventActive={newEventActive}
+				newTitle={newTitle}
+				newDate={newDate}
+				handleTyping={handleTyping}
+				comfirmNewEvent={comfirmNewEvent}
+				removeNewEvent={removeNewEvent}
+				inputRef={inputRef}
 				/>
 			<EventList
 				events={events}
-				orderAbc={orderAbc}
-				orderDate={orderDate}
+				order={order}
 				/>
 		  </BodyStyleWrapper>
 	  )
 	}
 }
 
-class AddNewEvent extends React.Component {
+class EventPlaceholder extends React.Component {
 
   render() {
-	  const { addNewEvent } = this.props;
-	  console.log(addNewEvent);
-	  return (
-		  <article style={firstArticleToAdd} onClick={addNewEvent}>
-		  	<span style={{margin:'auto'}} >Pridaj novú udalosť</span>
-		  </article>
+	  const {
+		  addNewEvent,
+		  newEventActive,
+		  newDate,
+		  newTitle,
+		  handleTyping,
+		  comfirmNewEvent,
+		  removeNewEvent,
+		  inputRef
+	  } = this.props;
 
-	  )
+	  if ( !newEventActive ) { return < AddNewEvent addNewEvent={addNewEvent} /> }
+
+	  return  ( < EventInput
+		  			newTitle={newTitle}
+					newDate={newDate}
+					inputRef={inputRef}
+					handleTyping={handleTyping}
+					comfirmNewEvent={comfirmNewEvent}
+					removeNewEvent={removeNewEvent}
+					/>
+				)
 	}
+}
+
+const AddNewEvent = ({addNewEvent}) => {
+	return (
+		<article className="addEvent" onClick={addNewEvent}>
+		  	<span style={{margin:'auto'}}>Pridaj novú udalosť</span>
+		</article>
+	)
+}
+
+class EventInput extends React.Component {
+
+	componentDidMount() {
+		this.props.inputRef.current.focus();
+		this.listenToComfirm('click', 'keyup')
+	}
+
+	componentWillUnmount() {
+		this.unlistenToComfirm('click', 'keyup')
+	}
+
+	listenToComfirm = (...eventTypes) => {
+		eventTypes.map( (type) =>
+			document.addEventListener(type, this.props.comfirmNewEvent)
+		)
+	}
+
+	unlistenToComfirm = (...eventTypes) => {
+		eventTypes.map( (type) =>
+			document.removeEventListener(type, this.props.comfirmNewEvent)
+		)
+	}
+
+	render() {
+		const {
+			newTitle,
+			newDate,
+			handleTyping,
+			inputRef,
+			removeNewEvent
+		} = this.props;
+
+		return (
+			<EventStyleWrapper >
+				<input className="input" type="date" value={newDate} onChange={handleTyping} />
+				<input className="input" ref={inputRef} type="text" value={newTitle} onChange={handleTyping} />
+				<span className="removeEvent" onClick={removeNewEvent}>Vymazať</span>
+			</EventStyleWrapper >
+		)
+	}
+
 }
 
 class EventList extends React.Component {
 
 	render() {
-		const { events, orderDate, orderAbc } = this.props;
+		const { events, order } = this.props;
 
 		if (events.length === 0) { return null }
 
-		const sorted = sortEvents(events, orderDate, orderAbc );
+		const sorted = sortEvents(events, order.date, order.abc);
 
 		return sorted.map( (e, i) => < Event key={i} title={e.title} date={e.date} /> )
 	}
@@ -64,16 +145,16 @@ const Event = ({title, date}) => {
 const EventTitle = ({title}) => {
 
 	return (
-		<hgroup>
+		<div>
 			{title.split('-').map((name, i) => {
 
-				const fontSize = name.trim() === 'meetup' ? '0.9rem' : '1rem';
-				const bold = i === 0 ? 'underline' : 'normal';
-				const style = { margin: 'unset', fontSize: fontSize, textDecoration: bold }
+				const size = name.trim() === 'meetup' ? '0.9rem' : '1rem';
+				const line = i === 0 ? 'underline' : 'normal';
+				const style = { margin: 'unset', fontSize: size, textDecoration: line }
 
 				return <p key={i} style={style}>{name.trim()}</p>
 			})}
-		</hgroup>
+		</div>
 
 	)
 }
