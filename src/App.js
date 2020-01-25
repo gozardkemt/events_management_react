@@ -39,7 +39,6 @@ export default class App extends React.Component {
 	}
 
 	// handle data import
-
 	componentDidMount() {
 		fetch(dataPath)
 			.then( res => res.json())
@@ -65,7 +64,6 @@ export default class App extends React.Component {
 	}
 
 	// handle sorting
-
 	sortAlphabeticaly = () => {
 		this.setState({
 			...defaultSortingState,
@@ -81,7 +79,6 @@ export default class App extends React.Component {
 	}
 
 	// handle adding new event
-
 	addNewEvent = () => { this.setState({ newEventActive: true })}
 	removeNewEvent = () => { this.setState({ ...defaultNewEventState})}
 
@@ -153,7 +150,9 @@ export default class App extends React.Component {
 						date: sortedDate
 					}}
 					/>
-				<Footer />
+				<Footer
+					countEvents={events.length}
+					/>
 			< /MainStyleWrapper >
 	  )
 	}

@@ -1,13 +1,16 @@
 import React from 'react';
-import { } from './styleWrappers.js';
+import { BarStyleWrapper } from './styleWrappers.js';
 
 export default class Footer extends React.Component {
 
   render() {
-	  return (
-		  <>
 
-		  </>
+	  return (
+		  <BarStyleWrapper>
+		  	<span className="countTitle">
+				Počet podujatí: {this.props.countEvents}
+			</span>
+		  </BarStyleWrapper>
 	  )
 	}
 }

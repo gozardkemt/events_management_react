@@ -1,5 +1,5 @@
 import React from 'react';
-import { FilterBarStyleWrapper, orderTitleStyle } from './styleWrappers';
+import { BarStyleWrapper } from './styleWrappers';
 
 export default class Header extends React.Component {
 
@@ -33,11 +33,11 @@ class FilterBar extends React.Component {
 		const abcButton = order.abc ? 'Xyz' : 'Abc';
 
 		return (
-			< FilterBarStyleWrapper >
+			< BarStyleWrapper >
 				<span className="sortTitle">Zoradiť:</span>
 				<span className="sortIcons" onClick={sortDates}>{dateButton}</span>
 				<span className="sortIcons" onClick={sortAbc}>{abcButton}</span>
-			</ FilterBarStyleWrapper >
+			</ BarStyleWrapper >
 		)
 	}
 }
