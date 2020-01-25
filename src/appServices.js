@@ -2,14 +2,26 @@
 //  formating
 
 export const formatDate = (s) => {
-	const d = new Date(s);
-	const day = d.getDate();
-	const month = d.getMonth() + 1;
-	const year = d.getFullYear();
+
+	const eventDate = new Date(s);
+	const today = new Date();
+	const day = eventDate.getDate();
+	const month = eventDate.getMonth() + 1;
+	const year = eventDate.getFullYear();
+
+	if (
+		today.getMonth() + 1 === month &&
+		today.getFullYear() === year
+	) {
+		if ( today.getDate() === day ) { return 'Dnes' }
+		if ( today.getDate() - day === 1  ) { return 'Včera' }
+		if ( today.getDate() - day === -1 ) { return 'Zajtra' }
+	};
+
 	return `${day}. ${month}. ${year}`;
 }
 
-//  sorting objects
+//  sorting events
 
 export const sortEvents = (events, date, abc) => {
 
@@ -37,7 +49,17 @@ const compare = (a, b) => {
   return 0;
 }
 
-// clicks 
+//  filtering events
+
+export const countEvents = (type, events) => {
+	return events.filter( (e) => {
+		const today = new Date(), thatDay = new Date(e.date);
+		return type === 'past' ? thatDay < today : today > thatDay;
+	}).length;
+}
+
+
+// clicks
 
 export const isClickedInOrNotEnter = (e, ref) => {
 

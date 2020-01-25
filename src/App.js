@@ -43,7 +43,7 @@ export default class App extends React.Component {
 		fetch(dataPath)
 			.then( res => res.json())
 			.then(
-			res => { this.saveDataToState(res) },
+			res => { this.saveDataToState(res)},
 			err => { this.errorWhileFetching(err) }
 			)
 	}
@@ -151,7 +151,7 @@ export default class App extends React.Component {
 					}}
 					/>
 				<Footer
-					countEvents={events.length}
+					events={events}
 					/>
 			< /MainStyleWrapper >
 	  )
