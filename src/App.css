@@ -1,9 +1,45 @@
 
 /* General Style */
 
+input {
+	border: none;
+	outline: none;
+	padding: .5rem 0;
+	margin-left: 0.4rem;
+	height: 1rem;
+	background-color: #e0e9ff;
+	color: #799BD2;
+	border-radius: .5rem;
+	font-size: 1rem;
+
+}
+
+input:focus {
+	background-color: #fff;
+}
+
+
 main {
 	margin: 1.5rem auto 0 auto;
 	font-family: 'Roboto';
+}
+
+.loaderContainer {
+	width: 100%;
+	display: flex;
+}
+
+#loader {
+	margin: auto;
+	height: 4rem;
+	padding: 1.5rem;
+}
+
+#error {
+	margin: auto;
+	padding: 1.5rem;
+	text-align: center;
+	color: #799BD2;
 }
 
  /* Header Components Style */
@@ -69,10 +105,14 @@ main {
 	font-size: .9rem;
 }
 
-.removeEvent {
+.eventButtons {
 	margin-left: auto;
 	padding: 0 1.5rem;
 	cursor: pointer
+}
+
+.eventButtons > * {
+	margin: 0 1rem;
 }
 
 .article {
@@ -85,8 +125,8 @@ main {
 	justify-content: flex-start;
 	align-items: center;
 	margin-top: 1rem;
-	-webkit-animation: sliteIn 0.45s ease-out both;
-	animation: sliteIn 0.45s ease-out both;
+	-webkit-animation: sliteIn 0.35s ease-out both;
+	animation: sliteIn 0.35s ease-out both;
 }
 
 @-webkit-keyframes sliteIn {

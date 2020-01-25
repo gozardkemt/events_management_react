@@ -2,7 +2,7 @@ import React from 'react';
 import Header from './Header.js'
 import Body from './Body.js'
 import Footer from './Footer.js'
-import { isClickedInOrNotEnter } from './appServices.js'
+import { isItEnter } from './appServices.js'
 import { MainStyleWrapper } from './styleWrappers.js';
 
 const dataPath = './data/events.json';
@@ -51,7 +51,7 @@ export default class App extends React.Component {
 	saveDataToState = (res) => {
 		this.setState({
 			events: res,
-			isLoading: false
+			isLoading: true
 			})
 	}
 
@@ -84,10 +84,10 @@ export default class App extends React.Component {
 
 	comfirmNewEvent = (e) => {
 
-		if ( isClickedInOrNotEnter(e, this.inputRef)) { return }
+		if (!isItEnter(e)) { return }
 
 		const newEvent = {
-			title: this.state.newTitle || 'Nový záznam',
+			title: this.state.newTitle || 'Prázdny záznam',
 			date: this.state.newDate || new Date()
 		}
 		this.setState({
@@ -112,7 +112,9 @@ export default class App extends React.Component {
 			sortedAlphabeticaly:sortedAbc,
 			newEventActive,
 			newDate,
-			newTitle
+			newTitle,
+			isLoading,
+			isError
 		} = this.state;
 
 		const {
@@ -136,6 +138,8 @@ export default class App extends React.Component {
 					}}
 					/>
 				<Body
+					isLoading={isLoading}
+					isError={isError}
 					events={events}
 					handleTyping={handleInputTyping}
 					newEventActive={newEventActive}

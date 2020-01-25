@@ -1,1 +1,1 @@
-Events management homework
+Events management assignment

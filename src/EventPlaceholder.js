@@ -41,23 +41,11 @@ class EventInput extends React.Component {
 
 	componentDidMount() {
 		this.props.inputRef.current.focus();
-		this.listenToComfirm('click', 'keyup')
+		document.addEventListener('keyup', this.props.comfirmNewEvent)
 	}
 
 	componentWillUnmount() {
-		this.unlistenToComfirm('click', 'keyup')
-	}
-
-	listenToComfirm = (...eventTypes) => {
-		eventTypes.map( (type) =>
-			document.addEventListener(type, this.props.comfirmNewEvent)
-		)
-	}
-
-	unlistenToComfirm = (...eventTypes) => {
-		eventTypes.map( (type) =>
-			document.removeEventListener(type, this.props.comfirmNewEvent)
-		)
+		document.removeEventListener('keyup', this.props.comfirmNewEvent)
 	}
 
 	render() {
@@ -66,14 +54,18 @@ class EventInput extends React.Component {
 			newDate,
 			handleTyping,
 			inputRef,
-			removeNewEvent
+			removeNewEvent,
+			comfirmNewEvent
 		} = this.props;
 
 		return (
 			<EventStyleWrapper >
 				<input className="input" type="date" value={newDate} onChange={handleTyping} />
 				<input className="input" ref={inputRef} type="text" value={newTitle} onChange={handleTyping} />
-				<span className="removeEvent" onClick={removeNewEvent}>Vymazať</span>
+				<div className="eventButtons">
+					<span onClick={comfirmNewEvent}>Potvrdiť</span>
+					<span onClick={removeNewEvent}>Vymazať</span>
+				</div>
 			</EventStyleWrapper >
 		)
 	}

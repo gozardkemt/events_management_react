@@ -13,9 +13,10 @@ export const formatDate = (s) => {
 		today.getMonth() + 1 === month &&
 		today.getFullYear() === year
 	) {
-		if ( today.getDate() === day ) { return 'Dnes' }
-		if ( today.getDate() - day === 1  ) { return 'Včera' }
-		if ( today.getDate() - day === -1 ) { return 'Zajtra' }
+		const diff = today.getDate() - day;
+		if ( diff === 0 ) { return 'Dnes' }
+		if ( diff === 1  ) { return 'Včera' }
+		if ( diff === -1 ) { return 'Zajtra' }
 	};
 
 	return `${day}. ${month}. ${year}`;
@@ -61,21 +62,12 @@ export const countEvents = (type, events) => {
 
 // clicks
 
-export const isClickedInOrNotEnter = (e, ref) => {
-
-	const inputText = ref.current;
-	const inputDate = inputText.previousSibling;
-
-	if (e.type === 'click')
-	{
-		if (e.target.contains(inputText)) { return true }
-		if (e.target.contains(inputDate)) { return true }
-	}
+export const isItEnter = (e) => {
 
 	if (e.type === 'keyup')
 	{
-		if (e.keyCode !== 13) { return true }
+		if (e.keyCode !== 13) { return false }
 	}
 
-	return false
+	return true
 }

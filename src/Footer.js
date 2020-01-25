@@ -15,10 +15,10 @@ export default class Footer extends React.Component {
 				Počet podujatí: {events.length}
 			</span>
 		  	<span className="countTitle">
-				Uplynulých: {countEvents( 'past' ,events)}
+				Uplynulých: {countEvents( 'past', events)}
 			</span>
 		  	<span className="countTitle">
-				Nadchádzajúcich: {countEvents( 'future' ,events)}
+				Nadchádzajúcich: {countEvents( 'future', events)}
 			</span>
 		  </BarStyleWrapper>
 	  )

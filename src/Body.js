@@ -7,6 +7,9 @@ export default class Body extends React.Component {
 
   render() {
 
+	  if ( this.props.isLoading ) { return < LoadingData /> }
+	  if ( this.props.isError ) { return < NetworkError /> }
+
 	  const {
 		  events,
 		  order,
@@ -40,3 +43,13 @@ export default class Body extends React.Component {
 	  )
 	}
 }
+
+const LoadingData = () => {
+	return (
+		<div className="loaderContainer">
+			<img alt="loading" src="./data/loader.gif" id="loader"/>
+		</div>
+	)
+}
+
+const NetworkError = () => <p id="error">Bohužial nastal problém so sieťou :(</p>
