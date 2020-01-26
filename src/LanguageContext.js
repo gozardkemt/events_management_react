@@ -18,7 +18,8 @@ export const dict = {
 		today: 'Today',
 		tomorrow: 'Tomorrow',
 		yesterday: 'Yesterday',
-		networkError: 'We are sorry, something went wrong :('
+		networkError: 'We are sorry, something went wrong :(',
+		filter: 'Filter',
 	},
 	sk: {
 		sort: 'Zoradiť',
@@ -37,7 +38,8 @@ export const dict = {
 		today: 'Dnes',
 		tomorrow: 'Zajtra',
 		yesterday: 'Včera',
-		networkError: 'Bohužial nastal problém so sieťou :('
+		networkError: 'Bohužial nastal problém so sieťou :(',
+		filter: 'Filter',
 	}
 }
 

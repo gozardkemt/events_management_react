@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { BarStyleWrapper } from './styleWrappers.js';
 import { LanguageContext } from './LanguageContext.js';
-import { countEvents } from './appServices.js';
+import { countEvents, filterEvents } from './appServices.js';
 
 export default class Footer extends React.Component {
 
   render() {
 
-	  const { events } = this.props;
+	  const { events, textQuery:query } = this.props;
 	  const transl = this.context;
 
 	  if (events.length === 0) { return null }
@@ -16,17 +16,16 @@ export default class Footer extends React.Component {
 	  return (
 		  <BarStyleWrapper>
 		  	<span className="countTitle">
-				{transl.eventsCount}: {events.length}
+				{transl.eventsCount}: {filterEvents(events, query).length}
 			</span>
 		  	<span className="countTitle">
-				{transl.pastEvents}: {countEvents( 'past', events)}
+				{transl.pastEvents}: {countEvents('past',filterEvents(events, query))}
 			</span>
 		  	<span className="countTitle">
-				{transl.futureEvents}: {countEvents( 'future', events)}
+				{transl.futureEvents}: {countEvents('future',filterEvents(events, query))}
 			</span>
 		  </BarStyleWrapper>
 	  )
-
 	}
 }
 

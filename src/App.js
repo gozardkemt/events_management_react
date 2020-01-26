@@ -26,7 +26,8 @@ const defaultDataHandlingState = {
 }
 
 const defaultOtherState = {
-	lang: 'sk'
+	lang: 'sk',
+	textQuery: ''
 }
 
 const defaultState = {
@@ -130,6 +131,7 @@ export default class App extends React.Component {
 			newTitle,
 			isLoading,
 			isError,
+			textQuery,
 			lang
 		} = this.state;
 
@@ -141,7 +143,7 @@ export default class App extends React.Component {
 			comfirmNewEvent,
 			removeNewEvent,
 			inputRef,
-			changeLang
+			changeLang,
 		} = this;
 
 		return (
@@ -151,6 +153,8 @@ export default class App extends React.Component {
 						sortAbc={sortAlphabeticaly}
 						sortDates={sortDateAscending}
 						changeLang={changeLang}
+						handleTyping={handleInputTyping}
+						textQuery={textQuery}
 						order={{
 							abc: sortedAbc,
 							date: sortedDate
@@ -159,6 +163,7 @@ export default class App extends React.Component {
 					<Body
 						isLoading={isLoading}
 						isError={isError}
+						textQuery={textQuery}
 						events={events}
 						handleTyping={handleInputTyping}
 						newEventActive={newEventActive}
@@ -175,6 +180,7 @@ export default class App extends React.Component {
 						/>
 					<Footer
 						events={events}
+						textQuery={textQuery}
 						/>
 				</ LanguageContext.Provider >
 			</ MainStyleWrapper >

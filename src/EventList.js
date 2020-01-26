@@ -1,16 +1,17 @@
 import React from 'react';
-import { formatDate, sortEvents } from './appServices.js';
+import { formatDate, sortEvents, filterEvents } from './appServices.js';
 import { EventStyleWrapper, EventDateStyleWrapper } from './styleWrappers.js';
 import { LanguageContext } from './LanguageContext.js';
 
 export default class EventList extends React.Component {
 
 	render() {
-		const { events, order } = this.props;
+		const { events, order, textQuery } = this.props;
 
 		if (events.length === 0) { return null }
 
-		const sorted = sortEvents(events, order.date, order.abc);
+		const filtered = filterEvents(events, textQuery)
+		const sorted = sortEvents(filtered, order.date, order.abc);
 
 		return sorted.map( (e, i) => < Event key={i} title={e.title} date={e.date} /> )
 	}

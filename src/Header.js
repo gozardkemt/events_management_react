@@ -11,7 +11,9 @@ export default class Header extends React.Component {
 			sortAbc,
 			sortDates,
 			order,
-			changeLang
+			changeLang,
+			handleTyping,
+			textQuery
 		} = this.props;
 
 		return (
@@ -22,6 +24,8 @@ export default class Header extends React.Component {
 					sortDates={sortDates}
 					order={order}
 					changeLang={changeLang}
+					textQuery={textQuery}
+					handleTyping={handleTyping}
 					/>
 			</>
 		)
@@ -31,7 +35,7 @@ export default class Header extends React.Component {
 class FilterBar extends React.Component {
 	render() {
 
-		const { sortAbc, sortDates, order, changeLang } = this.props;
+		const { sortAbc, sortDates, order, changeLang, textQuery, handleTyping } = this.props;
 
 		const dateButton = order.date ? 'newest' : 'oldest';
 		const abcButton = order.abc ? 'Xyz' : 'Abc';
@@ -42,6 +46,8 @@ class FilterBar extends React.Component {
 				<span className="sortTitle">{transl.sort}:</span>
 				<span className="sortIcons" onClick={sortDates}>{transl[dateButton]}</span>
 				<span className="sortIcons" onClick={sortAbc}>{abcButton}</span>
+				<span className="sortTitle">{transl.filter}:</span>
+				<input id="textQuery" onChange={handleTyping} value={textQuery} />
 				<span className="langIcon" onClick={changeLang}>{transl.lang}</span>
 			</ BarStyleWrapper >
 		)

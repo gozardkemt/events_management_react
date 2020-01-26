@@ -66,10 +66,15 @@ const compare = (a, b) => {
 //  filtering events
 
 export const countEvents = (type, events) => {
-	return events.filter( (e) => {
+	return events.filter( e => {
 		const today = new Date(), thatDay = new Date(e.date);
 		return type === 'past' ? thatDay < today : today > thatDay;
 	}).length;
+}
+
+export const filterEvents = (events, query) => {
+	const q = query.toLowerCase();
+	return events.filter( e => e.title.toLowerCase().includes(q))
 }
 
 // clicks

@@ -27,7 +27,8 @@ export default class Body extends React.Component {
 		  handleTyping,
 		  comfirmNewEvent,
 		  removeNewEvent,
-		  inputRef
+		  inputRef,
+		  textQuery
 	  } = this.props;
 
 	  return (
@@ -45,6 +46,7 @@ export default class Body extends React.Component {
 			<EventList
 				events={events}
 				order={order}
+				textQuery={textQuery}
 				/>
 		  </BodyStyleWrapper>
 	  )
