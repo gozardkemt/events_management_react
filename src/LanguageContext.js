@@ -17,7 +17,8 @@ export const dict = {
 		lang: 'sk',
 		today: 'Today',
 		tomorrow: 'Tomorrow',
-		yesterday: 'Yesterday'
+		yesterday: 'Yesterday',
+		networkError: 'We are sorry, something went wrong :('
 	},
 	sk: {
 		sort: 'Zoradiť',
@@ -35,7 +36,8 @@ export const dict = {
 		lang: 'en',
 		today: 'Dnes',
 		tomorrow: 'Zajtra',
-		yesterday: 'Včera'
+		yesterday: 'Včera',
+		networkError: 'Bohužial nastal problém so sieťou :('
 	}
 }
 

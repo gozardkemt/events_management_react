@@ -64,7 +64,7 @@ class EventInput extends React.Component {
 
 		return (
 			<EventStyleWrapper >
-				<input className="input" id="newDate" placeholder="dd-mm-yyyy" type="date" value={newDate} onChange={handleTyping} />
+				<input className="input" id="newDate" placeholder="dd-mm-yyyy" maxLength="10" type="date" value={newDate} onChange={handleTyping} />
 				<input className="input" id="newTitle" ref={inputRef} type="text" value={newTitle} onChange={handleTyping} />
 				<div className="eventButtons">
 					<span onClick={comfirmNewEvent}>{this.context.add}</span>

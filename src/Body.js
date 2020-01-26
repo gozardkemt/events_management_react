@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import EventPlaceholder from './EventPlaceholder.js'
+import { LanguageContext } from './LanguageContext.js'
 import EventList from './EventList.js'
 import { BodyStyleWrapper } from './styleWrappers.js';
 import loaderSrc from './img/loader.gif'
@@ -10,7 +11,11 @@ export default class Body extends React.Component {
   render() {
 
 	  if ( this.props.isLoading ) { return < LoadingData /> }
-	  if ( this.props.isError ) { return < NetworkError /> }
+	  if ( this.props.isError ) {
+			return < NetworkError
+		  		errorText={this.context.networkError}
+				/>
+		}
 
 	  const {
 		  events,
@@ -54,7 +59,9 @@ const LoadingData = () => {
 	)
 }
 
-const NetworkError = () => <p id="error">Bohužial nastal problém so sieťou :(</p>
+const NetworkError = ({errorText}) => <p id="error">{errorText}</p>
+
+Body.contextType = LanguageContext;
 
 Body.propTypes = {
 	events: PropTypes.arrayOf(PropTypes.object),
