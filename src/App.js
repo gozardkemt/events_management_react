@@ -3,6 +3,7 @@ import Header from './Header.js'
 import Body from './Body.js'
 import Footer from './Footer.js'
 import { isItEnter } from './appServices.js'
+import { LanguageContext, dict } from './LanguageContext.js'
 import { MainStyleWrapper } from './styleWrappers.js';
 
 const dataPath = './data/events.json';
@@ -24,10 +25,15 @@ const defaultDataHandlingState = {
 	isLoading: true
 }
 
+const defaultOtherState = {
+	lang: 'sk'
+}
+
 const defaultState = {
 	...defaultDataHandlingState,
 	...defaultSortingState,
-	...defaultNewEventState
+	...defaultNewEventState,
+	...defaultOtherState
 }
 
 export default class App extends React.Component {
@@ -38,7 +44,6 @@ export default class App extends React.Component {
 		this.state = defaultState
 	}
 
-	// handle data import
 	componentDidMount() {
 		fetch(dataPath)
 			.then( res => res.json())
@@ -51,7 +56,7 @@ export default class App extends React.Component {
 	saveDataToState = (res) => {
 		this.setState({
 			events: res,
-			isLoading: true
+			isLoading: false
 			})
 	}
 
@@ -63,9 +68,9 @@ export default class App extends React.Component {
 		})
 	}
 
-	// handle sorting
 	sortAlphabeticaly = () => {
 		this.setState({
+			...defaultNewEventState,
 			...defaultSortingState,
 			sortedAlphabeticaly: !this.state.sortedAlphabeticaly
 		})
@@ -73,12 +78,12 @@ export default class App extends React.Component {
 
 	sortDateAscending = () => {
 		this.setState({
+			...defaultNewEventState,
 			...defaultSortingState,
 			sortedDateAscending: !this.state.sortedDateAscending,
 		})
 	}
 
-	// handle adding new event
 	addNewEvent = () => { this.setState({ newEventActive: true })}
 	removeNewEvent = () => { this.setState({ ...defaultNewEventState})}
 
@@ -86,22 +91,32 @@ export default class App extends React.Component {
 
 		if (!isItEnter(e)) { return }
 
+		if (!this.state.newTitle) {
+			this.inputRef.current.focus()
+			return
+		}
+
 		const newEvent = {
-			title: this.state.newTitle || 'Prázdny záznam',
+			title: this.state.newTitle,
 			date: this.state.newDate || new Date()
 		}
 		this.setState({
 			...defaultState,
 			isLoading: false,
+			lang: this.state.lang,
 			events: [newEvent].concat(this.state.events),
 		})
 	}
 
 	handleInputTyping = e => {
-
 		const input = e.currentTarget;
-		const type = input.type === 'text' ? 'newTitle' : 'newDate';
-		this.setState({ [type]: input.value })
+		this.setState({ [input.id]: input.value })
+	}
+
+	changeLang = () => {
+		this.setState({
+			lang: this.state.lang === 'sk' ? 'en' : 'sk'
+		})
 	}
 
 	render() {
@@ -114,7 +129,8 @@ export default class App extends React.Component {
 			newDate,
 			newTitle,
 			isLoading,
-			isError
+			isError,
+			lang
 		} = this.state;
 
 		const {
@@ -124,40 +140,44 @@ export default class App extends React.Component {
 			handleInputTyping,
 			comfirmNewEvent,
 			removeNewEvent,
-			inputRef
+			inputRef,
+			changeLang
 		} = this;
 
 		return (
 			< MainStyleWrapper >
-		  		<Header
-					sortAbc={sortAlphabeticaly}
-					sortDates={sortDateAscending}
-					order={{
-						abc:sortedAbc,
-						date: sortedDate
-					}}
-					/>
-				<Body
-					isLoading={isLoading}
-					isError={isError}
-					events={events}
-					handleTyping={handleInputTyping}
-					newEventActive={newEventActive}
-					addNewEvent={addNewEvent}
-					newTitle={newTitle}
-					newDate={newDate}
-					comfirmNewEvent={comfirmNewEvent}
-					removeNewEvent={removeNewEvent}
-					inputRef={inputRef}
-					order={{
-						abc: sortedAbc,
-						date: sortedDate
-					}}
-					/>
-				<Footer
-					events={events}
-					/>
-			< /MainStyleWrapper >
+				< LanguageContext.Provider value={dict[lang]} >
+			  		<Header
+						sortAbc={sortAlphabeticaly}
+						sortDates={sortDateAscending}
+						changeLang={changeLang}
+						order={{
+							abc:sortedAbc,
+							date: sortedDate
+						}}
+						/>
+					<Body
+						isLoading={isLoading}
+						isError={isError}
+						events={events}
+						handleTyping={handleInputTyping}
+						newEventActive={newEventActive}
+						addNewEvent={addNewEvent}
+						newTitle={newTitle}
+						newDate={newDate}
+						comfirmNewEvent={comfirmNewEvent}
+						removeNewEvent={removeNewEvent}
+						inputRef={inputRef}
+						order={{
+							abc: sortedAbc,
+							date: sortedDate
+						}}
+						/>
+					<Footer
+						events={events}
+						/>
+				</ LanguageContext.Provider >
+			</ MainStyleWrapper >
 	  )
 	}
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import { formatDate, sortEvents } from './appServices.js';
-import { EventStyleWrapper } from './styleWrappers.js';
+import { EventStyleWrapper, EventDateStyleWrapper } from './styleWrappers.js';
+import { LanguageContext } from './LanguageContext.js';
 
 export default class EventList extends React.Component {
 
@@ -18,10 +19,10 @@ export default class EventList extends React.Component {
 const Event = ({title, date}) => {
 
 	return (
-		<EventStyleWrapper>
+		< EventStyleWrapper >
 			< EventDate date={date} />
 			< EventTitle title={title} />
-		</EventStyleWrapper>
+		</ EventStyleWrapper >
 	)
 }
 
@@ -42,12 +43,26 @@ const EventTitle = ({title}) => {
 	)
 }
 
-const EventDate = ({date}) => {
+class EventDate extends React.Component {
 
-	return (
-		<div style={{padding: '0 1.5rem'}}>
-			<small>Dátum konania:</small>
-			<p style={{margin: 'unset'}}>{formatDate(date)}</p>
-		</div>
-	)
+	render() {
+
+		const transl = this.context;
+		const date = formatDate(this.props.date);
+
+		const isToday = date === 'today',
+		 	  isTomor = date === 'tomorrow',
+			  isYestr = date === 'yesterday';
+
+		return (
+			< EventDateStyleWrapper >
+				<small>{this.context.eventDate}</small>
+				<p style={{margin: 'unset'}}>{
+					isToday || isTomor || isYestr ? transl[date] : date
+				}</p>
+			</ EventDateStyleWrapper >
+		)
+	}
 }
+
+EventDate.contextType = LanguageContext;

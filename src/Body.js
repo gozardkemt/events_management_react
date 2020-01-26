@@ -2,6 +2,7 @@ import React from 'react';
 import EventPlaceholder from './EventPlaceholder.js'
 import EventList from './EventList.js'
 import { BodyStyleWrapper } from './styleWrappers.js';
+import loaderSrc from './img/loader.gif'
 
 export default class Body extends React.Component {
 
@@ -47,7 +48,7 @@ export default class Body extends React.Component {
 const LoadingData = () => {
 	return (
 		<div className="loaderContainer">
-			<img alt="loading" src="./data/loader.gif" id="loader"/>
+			<img alt="loading" src={loaderSrc} id="loader"/>
 		</div>
 	)
 }

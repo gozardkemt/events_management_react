@@ -1,5 +1,6 @@
 import React from 'react';
 import { EventStyleWrapper } from './styleWrappers.js';
+import { LanguageContext } from './LanguageContext.js';
 
 export default class EventPlaceholder extends React.Component {
 
@@ -29,12 +30,15 @@ export default class EventPlaceholder extends React.Component {
 	}
 }
 
-const AddNewEvent = ({addNewEvent}) => {
-	return (
-		<article className="addEvent" onClick={addNewEvent}>
-		  	<span style={{margin:'auto'}}>Pridaj novú udalosť</span>
-		</article>
-	)
+class AddNewEvent extends React.Component {
+
+	render() {
+		return (
+			<article className="addEvent" onClick={this.props.addNewEvent}>
+			  	<span style={{margin:'auto'}}>{this.context.addNewEvent}</span>
+			</article>
+		)
+	}
 }
 
 class EventInput extends React.Component {
@@ -60,14 +64,17 @@ class EventInput extends React.Component {
 
 		return (
 			<EventStyleWrapper >
-				<input className="input" type="date" value={newDate} onChange={handleTyping} />
-				<input className="input" ref={inputRef} type="text" value={newTitle} onChange={handleTyping} />
+				<input className="input" id="newDate" placeholder="dd-mm-yyyy" type="date" value={newDate} onChange={handleTyping} />
+				<input className="input" id="newTitle" ref={inputRef} type="text" value={newTitle} onChange={handleTyping} />
 				<div className="eventButtons">
-					<span onClick={comfirmNewEvent}>Potvrdiť</span>
-					<span onClick={removeNewEvent}>Vymazať</span>
+					<span onClick={comfirmNewEvent}>{this.context.add}</span>
+					<span onClick={removeNewEvent}>{this.context.cancel}</span>
 				</div>
 			</EventStyleWrapper >
 		)
 	}
 
 }
+
+AddNewEvent.contextType = LanguageContext;
+EventInput.contextType = LanguageContext;

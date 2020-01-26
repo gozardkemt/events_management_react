@@ -3,23 +3,37 @@
 
 export const formatDate = (s) => {
 
-	const eventDate = new Date(s);
+	const eventDate = tryCreateDateObject(s);
+	const eventDay = eventDate.getDate();
+	const eventMonth = eventDate.getMonth() + 1;
+	const eventYear = eventDate.getFullYear();
 	const today = new Date();
-	const day = eventDate.getDate();
-	const month = eventDate.getMonth() + 1;
-	const year = eventDate.getFullYear();
 
 	if (
-		today.getMonth() + 1 === month &&
-		today.getFullYear() === year
+		today.getMonth() + 1 === eventMonth &&
+		today.getFullYear() === eventYear
 	) {
-		const diff = today.getDate() - day;
-		if ( diff === 0 ) { return 'Dnes' }
-		if ( diff === 1  ) { return 'Včera' }
-		if ( diff === -1 ) { return 'Zajtra' }
+		const diff = today.getDate() - eventDay;
+		if ( diff === 0 ) { return 'today' }
+		if ( diff === 1  ) { return 'yesterday' }
+		if ( diff === -1 ) { return 'tomorrow' }
 	};
 
-	return `${day}. ${month}. ${year}`;
+	return `${eventDay}. ${eventMonth}. ${eventYear}`;
+}
+
+const tryCreateDateObject = (s) => {
+
+	const withDatePicker = new Date(s)
+	if ( !isNaN(withDatePicker) ) { return withDatePicker }
+
+	// safari
+	const a = s.split('-');
+	const withoutDatePicker = new Date(a[2], a[1] - 1, a[0])
+
+	if (!!withoutDatePicker) { return withoutDatePicker }
+
+	return s
 }
 
 //  sorting events
@@ -36,12 +50,11 @@ export const sortEvents = (events, date, abc) => {
 
 	if ( abc === null ) {
 		return date ?
-		events.sort((a,b) => compare(newDate(a), newDate(b))) :
-		events.sort((a,b) => compare(newDate(b), newDate(a)));
+		events.sort((a,b) => compare(tryCreateDateObject(a.date), tryCreateDateObject(b.date))) :
+		events.sort((a,b) => compare(tryCreateDateObject(b.date), tryCreateDateObject(a.date)));
 	}
 }
 
-const newDate = (d) => new Date(d.date);
 const getTitle = (t) => t.title.toLowerCase();
 
 const compare = (a, b) => {
@@ -58,7 +71,6 @@ export const countEvents = (type, events) => {
 		return type === 'past' ? thatDay < today : today > thatDay;
 	}).length;
 }
-
 
 // clicks
 

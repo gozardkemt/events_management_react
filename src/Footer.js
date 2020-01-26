@@ -1,5 +1,6 @@
 import React from 'react';
 import { BarStyleWrapper } from './styleWrappers.js';
+import { LanguageContext } from './LanguageContext.js';
 import { countEvents } from './appServices.js';
 
 export default class Footer extends React.Component {
@@ -7,21 +8,25 @@ export default class Footer extends React.Component {
   render() {
 
 	  const { events } = this.props;
+	  const transl = this.context;
+
 	  if (events.length === 0) { return null }
 
 	  return (
 		  <BarStyleWrapper>
 		  	<span className="countTitle">
-				Počet podujatí: {events.length}
+				{transl.eventsCount}: {events.length}
 			</span>
 		  	<span className="countTitle">
-				Uplynulých: {countEvents( 'past', events)}
+				{transl.pastEvents}: {countEvents( 'past', events)}
 			</span>
 		  	<span className="countTitle">
-				Nadchádzajúcich: {countEvents( 'future', events)}
+				{transl.futureEvents}: {countEvents( 'future', events)}
 			</span>
 		  </BarStyleWrapper>
 	  )
 
 	}
 }
+
+Footer.contextType = LanguageContext;
