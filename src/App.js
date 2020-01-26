@@ -152,7 +152,7 @@ export default class App extends React.Component {
 						sortDates={sortDateAscending}
 						changeLang={changeLang}
 						order={{
-							abc:sortedAbc,
+							abc: sortedAbc,
 							date: sortedDate
 						}}
 						/>

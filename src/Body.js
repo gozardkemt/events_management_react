@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import EventPlaceholder from './EventPlaceholder.js'
 import EventList from './EventList.js'
 import { BodyStyleWrapper } from './styleWrappers.js';
@@ -54,3 +55,18 @@ const LoadingData = () => {
 }
 
 const NetworkError = () => <p id="error">Bohužial nastal problém so sieťou :(</p>
+
+Body.propTypes = {
+	events: PropTypes.arrayOf(PropTypes.object),
+	order: PropTypes.objectOf(PropTypes.bool),
+	addNewEvent: PropTypes.func.isRequired,
+	newEventActive: PropTypes.bool.isRequired,
+	newTitle: PropTypes.string,
+	newDate: PropTypes.string,
+	handleTyping: PropTypes.func.isRequired,
+	comfirmNewEvent: PropTypes.func.isRequired,
+	removeNewEvent: PropTypes.func.isRequired,
+	inputRef: PropTypes.shape({
+		current: PropTypes.instanceOf(Element),
+	}).isRequired
+}

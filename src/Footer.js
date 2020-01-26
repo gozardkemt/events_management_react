@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { BarStyleWrapper } from './styleWrappers.js';
 import { LanguageContext } from './LanguageContext.js';
 import { countEvents } from './appServices.js';
@@ -30,3 +31,7 @@ export default class Footer extends React.Component {
 }
 
 Footer.contextType = LanguageContext;
+
+Footer.propTypes = {
+	events: PropTypes.arrayOf(PropTypes.object).isRequired
+}

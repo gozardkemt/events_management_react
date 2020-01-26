@@ -1,6 +1,7 @@
 import React from 'react';
 import { BarStyleWrapper } from './styleWrappers';
-import { LanguageContext } from './LanguageContext.js'
+import { LanguageContext } from './LanguageContext.js';
+import PropTypes from 'prop-types';
 
 export default class Header extends React.Component {
 
@@ -36,14 +37,12 @@ class FilterBar extends React.Component {
 		const abcButton = order.abc ? 'Xyz' : 'Abc';
 		const transl = this.context;
 
-		console.log(this.context);
-
 		return (
 			< BarStyleWrapper >
 				<span className="sortTitle">{transl.sort}:</span>
 				<span className="sortIcons" onClick={sortDates}>{transl[dateButton]}</span>
 				<span className="sortIcons" onClick={sortAbc}>{abcButton}</span>
-				<span className="langIcon" onClick={changeLang}>{this.context.lang}</span>
+				<span className="langIcon" onClick={changeLang}>{transl.lang}</span>
 			</ BarStyleWrapper >
 		)
 	}
@@ -51,3 +50,10 @@ class FilterBar extends React.Component {
 
 FilterBar.contextType = LanguageContext;
 Header.contextType = LanguageContext;
+
+Header.propTypes = {
+	sortAbc: PropTypes.func.isRequired,
+	sortDates: PropTypes.func.isRequired,
+	changeLang: PropTypes.func.isRequired,
+	order: PropTypes.objectOf(PropTypes.bool),
+}
