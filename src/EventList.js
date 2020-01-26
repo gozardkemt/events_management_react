@@ -37,7 +37,7 @@ const EventTitle = ({title}) => {
 				const line = i === 0 ? 'underline' : 'normal';
 				const style = { margin: 'unset', fontSize: size, textDecoration: line }
 
-				return  <p contentEditable="true" key={i} style={style}>{name.trim()}</p>
+				return  <p key={i} style={style}>{name.trim()}</p>
 			})}
 		</div>
 
@@ -58,7 +58,7 @@ class EventDate extends React.Component {
 		return (
 			< EventDateStyleWrapper >
 				<small>{this.context.eventDate}</small>
-				<p contentEditable="true" style={{margin: 'unset'}}>{
+				<p style={{margin: 'unset'}}>{
 					isToday || isTomor || isYestr ? transl[date] : date
 				}</p>
 			</ EventDateStyleWrapper >

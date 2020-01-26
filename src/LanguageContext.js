@@ -39,7 +39,7 @@ export const dict = {
 		tomorrow: 'Zajtra',
 		yesterday: 'Včera',
 		networkError: 'Bohužial nastal problém so sieťou :(',
-		filter: 'Filter',
+		filter: 'Filtrovať',
 	}
 }
 

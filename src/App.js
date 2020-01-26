@@ -91,7 +91,6 @@ export default class App extends React.Component {
 	comfirmNewEvent = (e) => {
 
 		if (!isItEnter(e)) { return }
-
 		if (!this.state.newTitle) {
 			this.inputRef.current.focus()
 			return
@@ -101,6 +100,7 @@ export default class App extends React.Component {
 			title: this.state.newTitle,
 			date: this.state.newDate || new Date()
 		}
+
 		this.setState({
 			...defaultState,
 			isLoading: false,
