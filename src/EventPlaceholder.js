@@ -1,80 +1,54 @@
-import React from 'react';
-import { EventStyleWrapper } from './styleWrappers.js';
+import React,{useContext, useEffect} from 'react';
 import { LanguageContext } from './LanguageContext.js';
 
-export default class EventPlaceholder extends React.Component {
+export const EventPlaceholder = ({ addNewEvent, newEventActive, newDate, newTitle, comfirmNewEvent, removeNewEvent, inputRef }) => {
 
-  render() {
-	  const {
-		  addNewEvent,
-		  newEventActive,
-		  newDate,
-		  newTitle,
-		  handleTyping,
-		  comfirmNewEvent,
-		  removeNewEvent,
-		  inputRef
-	  } = this.props;
-
-	  if ( !newEventActive ) { return < AddNewEvent addNewEvent={addNewEvent} /> }
+	  if ( !newEventActive ) {
+		  return < AddNewEvent addNewEvent={addNewEvent} />
+	  }
 
 	  return  ( < EventInput
 		  			newTitle={newTitle}
 					newDate={newDate}
 					inputRef={inputRef}
-					handleTyping={handleTyping}
 					comfirmNewEvent={comfirmNewEvent}
 					removeNewEvent={removeNewEvent}
 					/>
-				)
-	}
+			)
 }
 
-class AddNewEvent extends React.Component {
+const AddNewEvent = ({addNewEvent}) => {
 
-	render() {
-		return (
-			<article className="addEvent" onClick={this.props.addNewEvent}>
-			  	<span style={{margin:'auto'}}>{this.context.addNewEvent}</span>
-			</article>
-		)
-	}
+	const dict = useContext(LanguageContext);
+
+	return (
+		<article className="addEvent" onClick={addNewEvent}>
+		  	<span style={{margin:'auto'}}>{dict.addNewEvent}</span>
+		</article>
+	)
 }
 
-class EventInput extends React.Component {
+const EventInput = ({newTitle, newDate, inputRef, removeNewEvent, comfirmNewEvent}) => {
 
-	componentDidMount() {
-		this.props.inputRef.current.focus();
-		document.addEventListener('keyup', this.props.comfirmNewEvent)
-	}
+	useEffect( () => {
+		document.addEventListener('keyup', comfirmNewEvent)
+		return ( () => {
+			document.removeEventListener('keyup', comfirmNewEvent)
+		})
+}, [comfirmNewEvent])
 
-	componentWillUnmount() {
-		document.removeEventListener('keyup', this.props.comfirmNewEvent)
-	}
+	useEffect( () => { inputRef.current.focus() }, [inputRef])
 
-	render() {
-		const {
-			newTitle,
-			newDate,
-			handleTyping,
-			inputRef,
-			removeNewEvent,
-			comfirmNewEvent
-		} = this.props;
+	const dict = useContext(LanguageContext);
 
-		return (
-			<EventStyleWrapper >
-				<input className="input" id="newDate" placeholder="dd-mm-yyyy" maxLength="10" type="date" value={newDate} onChange={handleTyping} />
-				<input className="input" id="newTitle" ref={inputRef} type="text" value={newTitle} onChange={handleTyping} />
-				<div className="eventButtons">
-					<span onClick={comfirmNewEvent}>{this.context.add}</span>
-					<span onClick={removeNewEvent}>{this.context.cancel}</span>
-				</div>
-			</EventStyleWrapper >
-		)
-	}
-
+	return (
+		<article className="article" >
+			<input className="input" id="newDate" placeholder="dd-mm-yyyy" maxLength="10" type="date" {...newDate} />
+			<input className="input" id="newTitle" ref={inputRef} type="text" {...newTitle} />
+			<div className="eventButtons">
+				<span onClick={comfirmNewEvent}>{dict.add}</span>
+				<span onClick={removeNewEvent}>{dict.cancel}</span>
+			</div>
+		</article>
+	)
 }
-
-AddNewEvent.contextType = LanguageContext;
-EventInput.contextType = LanguageContext;

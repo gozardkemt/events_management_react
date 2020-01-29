@@ -1,65 +1,57 @@
-import React from 'react';
-import { BarStyleWrapper } from './styleWrappers';
+import React,{useContext} from 'react';
 import { LanguageContext } from './LanguageContext.js';
 import PropTypes from 'prop-types';
 
-export default class Header extends React.Component {
+export const Header = ({sortEvents, order, changeLang, textQuery}) => {
 
-	render() {
+	const dict = useContext(LanguageContext);
 
-		const {
-			sortAbc,
-			sortDates,
-			order,
-			changeLang,
-			handleTyping,
-			textQuery
-		} = this.props;
-
-		return (
-			<>
-				<h1 className="title">{this.context.events}</h1>
-				< FilterBar
-					sortAbc={sortAbc}
-					sortDates={sortDates}
-					order={order}
-					changeLang={changeLang}
-					textQuery={textQuery}
-					handleTyping={handleTyping}
-					/>
-			</>
-		)
-	}
+	return (
+		<>
+			<h1 className="title">{dict.events}</h1>
+			< FilterBar
+				sortEvents={sortEvents}
+				order={order}
+				changeLang={changeLang}
+				textQuery={textQuery}
+				/>
+		</>
+	)
 }
 
-class FilterBar extends React.Component {
-	render() {
+const FilterBar = ({sortEvents, order, changeLang, textQuery}) => {
 
-		const { sortAbc, sortDates, order, changeLang, textQuery, handleTyping } = this.props;
+	const dict = useContext(LanguageContext);
 
-		const dateButton = order.date ? 'newest' : 'oldest';
-		const abcButton = order.abc ? 'Xyz' : 'Abc';
-		const transl = this.context;
+	const dateButtonTitle = order.byDate ? 'newest' : 'oldest';
+	const abcButtonTitle = order.alpha ? 'Xyz' : 'Abc';
 
-		return (
-			< BarStyleWrapper >
-				<span className="sortTitle">{transl.sort}:</span>
-				<span className="sortIcons" onClick={sortDates}>{transl[dateButton]}</span>
-				<span className="sortIcons" onClick={sortAbc}>{abcButton}</span>
-				<span className="sortTitle">{transl.filter}:</span>
-				<input id="textQuery" onChange={handleTyping} value={textQuery} />
-				<span className="langIcon" onClick={changeLang}>{transl.lang}</span>
-			</ BarStyleWrapper >
-		)
-	}
+	return (
+		<div className="bar">
+			<span className="sortTitle">
+				{dict.sort}:
+			</span>
+			<span className="sortIcons" id="byDate" onClick={sortEvents}>
+				{dict[dateButtonTitle]}
+			</span>
+			<span className="sortIcons" id="alpha" onClick={sortEvents}>
+				{abcButtonTitle}
+			</span>
+			<span className="sortTitle">
+				{dict.filter}:
+			</span>
+			<input id="textQuery" {...textQuery} />
+			<span className="langIcon" onClick={changeLang}>
+				{dict.lang}
+			</span>
+		</div>
+	)
+
 }
-
-FilterBar.contextType = LanguageContext;
-Header.contextType = LanguageContext;
 
 Header.propTypes = {
-	sortAbc: PropTypes.func.isRequired,
-	sortDates: PropTypes.func.isRequired,
+	sortEvents: PropTypes.func.isRequired,
+	order: PropTypes.object.isRequired,
 	changeLang: PropTypes.func.isRequired,
-	order: PropTypes.objectOf(PropTypes.bool),
+	textQuery: PropTypes.object.isRequired
 }

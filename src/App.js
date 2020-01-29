@@ -1,189 +1,97 @@
-import React from 'react';
-import Header from './Header.js'
-import Body from './Body.js'
-import Footer from './Footer.js'
-import { isItEnter } from './appServices.js'
-import { LanguageContext, dict } from './LanguageContext.js'
+import React,{ useState, useRef, useContext } from 'react';
+import { Header } from './Header.js'
+import { Body } from './Body.js'
+import { Footer } from './Footer.js'
+import { LanguageContext } from './LanguageContext.js'
 import { MainStyleWrapper } from './styleWrappers.js';
+import { useInputValue, useFetchData, useSortEvents } from './appHooks.js'
+import { isItEnter } from './appServices.js'
 
-const dataPath = './data/events.json';
-
-const defaultNewEventState = {
-	newEventActive: false,
-	newTitle: '',
-	newDate: ''
-}
-
-const defaultSortingState = {
-	sortedAlphabeticaly: null,
-	sortedDateAscending: null
-}
-
-const defaultDataHandlingState = {
+const defaultData = {
 	events: [],
 	isError: false,
 	isLoading: true
 }
 
-const defaultOtherState = {
-	lang: 'sk',
-	textQuery: ''
+const defaultUserSort = {
+	alpha: null,
+	byDate: null
 }
 
-const defaultState = {
-	...defaultDataHandlingState,
-	...defaultSortingState,
-	...defaultNewEventState,
-	...defaultOtherState
-}
+const defaultNewEvent = false;
+const defaultInputValue = '';
+const defaultLang = 'sk';
 
-export default class App extends React.Component {
+export const App = () => {
 
-	constructor(props) {
-		super(props)
-		this.inputRef = React.createRef();
-		this.state = defaultState
+	const [ data, setData ] = useFetchData(defaultData)
+	const [ userSort, setUserSort, handleSortClick ] = useSortEvents(defaultUserSort)
+	const [ newEventActive, setNewEventActive ] = useState(defaultNewEvent)
+	const [ lang, setLang ] = useState(defaultLang);
+
+	const [ newDate, setNewDate ] = useInputValue(defaultInputValue);
+	const [ newTitle, setNewTitle ]  = useInputValue(defaultInputValue);
+	const [ textQuery ] = useInputValue(defaultInputValue);
+
+	const inputRef = useRef(null);
+	const dict = useContext(LanguageContext);
+
+	const addNewEvent = () => { setNewEventActive(true) }
+	const removeNewEvent = () => {
+		setNewEventActive(defaultNewEvent)
+		setNewDate(defaultInputValue)
+		setNewTitle(defaultInputValue)
 	}
 
-	componentDidMount() {
-		fetch(dataPath)
-			.then( res => res.json())
-			.then(
-			res => { this.saveDataToState(res)},
-			err => { this.errorWhileFetching(err) }
-			)
-	}
-
-	saveDataToState = (res) => {
-		this.setState({
-			events: res,
-			isLoading: false
-			})
-	}
-
-	errorWhileFetching = (err) => {
-		console.error(err);
-		this.setState({
-			isLoading: false,
-			isError: true
-		})
-	}
-
-	sortAlphabeticaly = () => {
-		this.setState({
-			...defaultNewEventState,
-			...defaultSortingState,
-			sortedAlphabeticaly: !this.state.sortedAlphabeticaly
-		})
-	}
-
-	sortDateAscending = () => {
-		this.setState({
-			...defaultNewEventState,
-			...defaultSortingState,
-			sortedDateAscending: !this.state.sortedDateAscending,
-		})
-	}
-
-	addNewEvent = () => { this.setState({ newEventActive: true })}
-	removeNewEvent = () => { this.setState({ ...defaultNewEventState})}
-
-	comfirmNewEvent = (e) => {
+	const comfirmNewEvent = (e) => {
 
 		if (!isItEnter(e)) { return }
-		if (!this.state.newTitle) {
-			this.inputRef.current.focus()
+
+		if (!newTitle.value) {
+			inputRef.current.focus()
 			return
 		}
 
 		const newEvent = {
-			title: this.state.newTitle,
-			date: this.state.newDate || new Date()
+			title: newTitle.value,
+			date: newDate.value || new Date()
 		}
 
-		this.setState({
-			...defaultState,
-			isLoading: false,
-			lang: this.state.lang,
-			events: [newEvent].concat(this.state.events),
+		setUserSort(defaultUserSort)
+		setData({
+			events: [newEvent].concat(data.events)
 		})
 	}
 
-	handleInputTyping = e => {
-		const input = e.currentTarget;
-		this.setState({ [input.id]: input.value })
-	}
+	const changeLang = () => setLang( lang === 'sk' ? 'en' : 'sk' )
 
-	changeLang = () => {
-		this.setState({
-			lang: this.state.lang === 'sk' ? 'en' : 'sk'
-		})
-	}
+	return (
+		< MainStyleWrapper >
+			< LanguageContext.Provider value={dict[lang]} >
+		  		<Header
+					sortEvents={handleSortClick}
+					changeLang={changeLang}
+					textQuery={textQuery}
+					order={userSort}
+					/>
+				<Body
+					data={data}
+					textQuery={textQuery}
+					newTitle={newTitle}
+					newDate={newDate}
+					newEventActive={newEventActive}
+					addNewEvent={addNewEvent}
+					comfirmNewEvent={comfirmNewEvent}
+					removeNewEvent={removeNewEvent}
+					inputRef={inputRef}
+					order={userSort}
+					/>
+				<Footer
+					events={data.events}
+					textQuery={textQuery.value}
+					/>
+			</ LanguageContext.Provider >
+		</ MainStyleWrapper >
+  )
 
-	render() {
-
-		const {
-			events,
-			sortedDateAscending:sortedDate,
-			sortedAlphabeticaly:sortedAbc,
-			newEventActive,
-			newDate,
-			newTitle,
-			isLoading,
-			isError,
-			textQuery,
-			lang
-		} = this.state;
-
-		const {
-			sortAlphabeticaly,
-			sortDateAscending,
-			addNewEvent,
-			handleInputTyping,
-			comfirmNewEvent,
-			removeNewEvent,
-			inputRef,
-			changeLang,
-		} = this;
-
-		return (
-			< MainStyleWrapper >
-				< LanguageContext.Provider value={dict[lang]} >
-			  		<Header
-						sortAbc={sortAlphabeticaly}
-						sortDates={sortDateAscending}
-						changeLang={changeLang}
-						handleTyping={handleInputTyping}
-						textQuery={textQuery}
-						order={{
-							abc: sortedAbc,
-							date: sortedDate
-						}}
-						/>
-					<Body
-						isLoading={isLoading}
-						isError={isError}
-						textQuery={textQuery}
-						events={events}
-						handleTyping={handleInputTyping}
-						newEventActive={newEventActive}
-						addNewEvent={addNewEvent}
-						newTitle={newTitle}
-						newDate={newDate}
-						comfirmNewEvent={comfirmNewEvent}
-						removeNewEvent={removeNewEvent}
-						inputRef={inputRef}
-						order={{
-							abc: sortedAbc,
-							date: sortedDate
-						}}
-						/>
-					<Footer
-						events={events}
-						textQuery={textQuery}
-						/>
-				</ LanguageContext.Provider >
-			</ MainStyleWrapper >
-	  )
-	}
 }

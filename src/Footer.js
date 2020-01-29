@@ -1,35 +1,32 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import PropTypes from 'prop-types';
 import { BarStyleWrapper } from './styleWrappers.js';
 import { LanguageContext } from './LanguageContext.js';
 import { countEvents, filterEvents } from './appServices.js';
 
-export default class Footer extends React.Component {
+export const Footer = ({ events, textQuery:query }) => {
 
-  render() {
+	const dict = useContext(LanguageContext);
 
-	  const { events, textQuery:query } = this.props;
-	  const transl = this.context;
+	if (events.length === 0) { return null }
 
-	  if (events.length === 0) { return null }
+	const filteredEvents = filterEvents(events, query);
 
-	  return (
-		  <BarStyleWrapper>
-		  	<span className="countTitle">
-				{transl.eventsCount}: {filterEvents(events, query).length}
-			</span>
-		  	<span className="countTitle">
-				{transl.pastEvents}: {countEvents('past',filterEvents(events, query))}
-			</span>
-		  	<span className="countTitle">
-				{transl.futureEvents}: {countEvents('future',filterEvents(events, query))}
-			</span>
-		  </BarStyleWrapper>
-	  )
-	}
+	return (
+	  <BarStyleWrapper>
+	  	<span className="countTitle">
+			{dict.eventsCount}: {filteredEvents.length}
+		</span>
+	  	<span className="countTitle">
+			{dict.pastEvents}: {countEvents('past', filteredEvents)}
+		</span>
+	  	<span className="countTitle">
+			{dict.futureEvents}: {countEvents('future', filteredEvents)}
+		</span>
+	  </BarStyleWrapper>
+	)
+
 }
-
-Footer.contextType = LanguageContext;
 
 Footer.propTypes = {
 	events: PropTypes.arrayOf(PropTypes.object).isRequired

@@ -66,11 +66,18 @@ const compare = (a, b) => {
 //  filtering events
 
 export const countEvents = (type, events) => {
-	const today = new Date().getTime();
+	const today = resetTimeInDate(new Date());
 	return events.filter( e => {
-		const eventDay = new Date(e.date).getTime();
+		const eventDay = resetTimeInDate(new Date(e.date));
 		return type === 'past' ? eventDay < today : today < eventDay;
 	}).length;
+}
+
+const resetTimeInDate = (d) => {
+			d.setMinutes(0);
+ 			d.setSeconds(0);
+ 			d.setMilliseconds(0);
+ 	return 	d.setHours(0);
 }
 
 export const filterEvents = (events, query) => {

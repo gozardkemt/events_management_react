@@ -1,31 +1,24 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import { formatDate, sortEvents, filterEvents } from './appServices.js';
 import { EventStyleWrapper, EventDateStyleWrapper } from './styleWrappers.js';
 import { LanguageContext } from './LanguageContext.js';
 
-export default class EventList extends React.Component {
+export const EventList = ({ events, order, textQuery }) => {
 
-	render() {
-		const { events, order, textQuery } = this.props;
+	if (events.length === 0) { return null }
 
-		if (events.length === 0) { return null }
+	const filtered = filterEvents( events, textQuery )
+	const sorted = sortEvents( filtered, order.byDate, order.alpha)
 
-		const filtered = filterEvents(events, textQuery)
-		const sorted = sortEvents(filtered, order.date, order.abc);
-
-		return sorted.map( (e, i) => < Event key={i} title={e.title} date={e.date} /> )
-	}
+	return sorted.map((e, i) => <Event key={i} title={e.title} date={e.date}/>)
 }
 
-const Event = ({title, date}) => {
-
-	return (
-		< EventStyleWrapper >
-			< EventDate date={date} />
-			< EventTitle title={title} />
-		</ EventStyleWrapper >
-	)
-}
+const Event = ({title, date}) => (
+	< EventStyleWrapper >
+		< EventDate date={date} />
+		< EventTitle title={title} />
+	</ EventStyleWrapper >
+)
 
 const EventTitle = ({title}) => {
 
@@ -35,8 +28,11 @@ const EventTitle = ({title}) => {
 
 				const size = name.trim() === 'meetup' ? '0.9rem' : '1rem';
 				const line = i === 0 ? 'underline' : 'normal';
-				const style = { margin: 'unset', fontSize: size, textDecoration: line }
-
+				const style = {
+					margin: 'unset',
+					fontSize: size,
+					textDecoration: line
+				}
 				return  <p key={i} style={style}>{name.trim()}</p>
 			})}
 		</div>
@@ -44,26 +40,24 @@ const EventTitle = ({title}) => {
 	)
 }
 
-class EventDate extends React.Component {
+const EventDate = (props) => {
 
-	render() {
+	const dict = useContext(LanguageContext);
 
-		const transl = this.context;
-		const date = formatDate(this.props.date);
+	const date = formatDate(props.date);
+	const isToday = date === 'today',
+	 	  isTomor = date === 'tomorrow',
+		  isYestr = date === 'yesterday';
 
-		const isToday = date === 'today',
-		 	  isTomor = date === 'tomorrow',
-			  isYestr = date === 'yesterday';
+	return (
+		< EventDateStyleWrapper >
+			<small>{dict.eventDate}</small>
+			<p style={{margin: 'unset'}}>
+			{
+				isToday || isTomor || isYestr ? dict[date] : date
+			}
+			</p>
+		</ EventDateStyleWrapper >
+	)
 
-		return (
-			< EventDateStyleWrapper >
-				<small>{this.context.eventDate}</small>
-				<p style={{margin: 'unset'}}>{
-					isToday || isTomor || isYestr ? transl[date] : date
-				}</p>
-			</ EventDateStyleWrapper >
-		)
-	}
 }
-
-EventDate.contextType = LanguageContext;
