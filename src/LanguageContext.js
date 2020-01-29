@@ -43,4 +43,4 @@ export const dict = {
 	}
 }
 
-export const LanguageContext = React.createContext( dict.sk )
+export const LanguageContext = React.createContext( dict )

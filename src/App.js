@@ -25,8 +25,8 @@ const defaultLang = 'sk';
 export const App = () => {
 
 	const [ data, setData ] = useFetchData(defaultData)
-	const [ userSort, setUserSort, handleSortClick ] = useSortEvents(defaultUserSort)
 	const [ newEventActive, setNewEventActive ] = useState(defaultNewEvent)
+	const [ userSort, setResetSort, setSortClick ] = useSortEvents(defaultUserSort)
 	const [ lang, setLang ] = useState(defaultLang);
 
 	const [ newDate, setNewDate ] = useInputValue(defaultInputValue);
@@ -36,9 +36,11 @@ export const App = () => {
 	const inputRef = useRef(null);
 	const dict = useContext(LanguageContext);
 
-	const addNewEvent = () => { setNewEventActive(true) }
+	const disableNewEvent = () => setNewEventActive(defaultNewEvent)
+	const addNewEvent = () => setNewEventActive(true)
+
 	const removeNewEvent = () => {
-		setNewEventActive(defaultNewEvent)
+		disableNewEvent()
 		setNewDate(defaultInputValue)
 		setNewTitle(defaultInputValue)
 	}
@@ -57,19 +59,20 @@ export const App = () => {
 			date: newDate.value || new Date()
 		}
 
-		setUserSort(defaultUserSort)
+		setResetSort()
+		removeNewEvent()
 		setData({
 			events: [newEvent].concat(data.events)
 		})
 	}
-
 	const changeLang = () => setLang( lang === 'sk' ? 'en' : 'sk' )
 
 	return (
 		< MainStyleWrapper >
 			< LanguageContext.Provider value={dict[lang]} >
 		  		<Header
-					sortEvents={handleSortClick}
+					disableNewEvent={disableNewEvent}
+					sortEvents={setSortClick}
 					changeLang={changeLang}
 					textQuery={textQuery}
 					order={userSort}

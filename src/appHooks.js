@@ -51,7 +51,7 @@ export const useSortEvents = (defaultUserSort) => {
 
 	const [ userSort, setUserSort ] = useState(defaultUserSort)
 
-	const handleSortClick = (e) => (
+	const setSortClick = (e) => (
 		e.currentTarget.id === 'alpha' ? sortAlpha() : sortbyDate()
 	)
 
@@ -69,5 +69,7 @@ export const useSortEvents = (defaultUserSort) => {
 		})
 	}
 
-	return [ userSort, setUserSort, handleSortClick ]
+	const setResetSort = () => { setUserSort(defaultUserSort) }
+
+	return [ userSort, setResetSort, setSortClick ]
 }

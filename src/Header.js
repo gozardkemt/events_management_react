@@ -1,8 +1,8 @@
-import React,{useContext} from 'react';
+import React,{ useContext } from 'react';
 import { LanguageContext } from './LanguageContext.js';
 import PropTypes from 'prop-types';
 
-export const Header = ({sortEvents, order, changeLang, textQuery}) => {
+export const Header = ({ disableNewEvent, sortEvents, order, changeLang, textQuery }) => {
 
 	const dict = useContext(LanguageContext);
 
@@ -10,6 +10,7 @@ export const Header = ({sortEvents, order, changeLang, textQuery}) => {
 		<>
 			<h1 className="title">{dict.events}</h1>
 			< FilterBar
+				disableNewEvent={disableNewEvent}
 				sortEvents={sortEvents}
 				order={order}
 				changeLang={changeLang}
@@ -19,7 +20,7 @@ export const Header = ({sortEvents, order, changeLang, textQuery}) => {
 	)
 }
 
-const FilterBar = ({sortEvents, order, changeLang, textQuery}) => {
+const FilterBar = ({disableNewEvent, sortEvents, order, changeLang, textQuery}) => {
 
 	const dict = useContext(LanguageContext);
 
@@ -27,7 +28,7 @@ const FilterBar = ({sortEvents, order, changeLang, textQuery}) => {
 	const abcButtonTitle = order.alpha ? 'Xyz' : 'Abc';
 
 	return (
-		<div className="bar">
+		<div className="bar" onClick={disableNewEvent}>
 			<span className="sortTitle">
 				{dict.sort}:
 			</span>
